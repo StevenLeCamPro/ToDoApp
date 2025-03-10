@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Modifier la Tâche | {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-900 to-purple-900 p-6">
+    
+    <div class="w-full max-w-lg bg-white/10 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-white/20">
+        
+      
+        <h1 class="text-white text-3xl font-extrabold text-center mb-6">
+            Modifier la Tâche
+        </h1>
+
+        {{ include('task/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+        <div class="mt-6 flex justify-between">
+            <a href="{{ path('app_task_index') }}" 
+               class="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold rounded-xl shadow-lg transform transition 
+                      hover:scale-105 hover:shadow-2xl active:scale-95">
+                Retour à la liste
+            </a>
+            {{ include('task/_delete_form.html.twig') }}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

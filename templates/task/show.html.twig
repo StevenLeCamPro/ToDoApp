@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail de la Tâche | {{ parent() }}{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-900 to-purple-900 p-6">
+    
+    <div class="w-full max-w-lg bg-white/10 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-white/20">
+        
+      
+        <h1 class="text-white text-3xl font-extrabold text-center mb-6">
+            Détails de la Tâche
+        </h1>
+
+      
+        <table class="w-full bg-white/10 backdrop-blur-lg text-white rounded-2xl shadow-lg">
+            <tbody>
+                <tr class="border-b border-white/20">
+                    <th class="py-3 px-6 text-left font-semibold">ID</th>
+                    <td class="py-3 px-6">{{ task.id }}</td>
+                </tr>
+                <tr class="border-b border-white/20">
+                    <th class="py-3 px-6 text-left font-semibold">Titre</th>
+                    <td class="py-3 px-6">{{ task.title }}</td>
+                </tr>
+                <tr class="border-b border-white/20">
+                    <th class="py-3 px-6 text-left font-semibold">Description</th>
+                    <td class="py-3 px-6">{{ task.description }}</td>
+                </tr>
+                <tr class="border-b border-white/20">
+                    <th class="py-3 px-6 text-left font-semibold">Statut</th>
+                    <td class="py-3 px-6">
+                        <span class="px-3 py-1 rounded-full text-sm font-bold
+                            {% if task.isDone %} bg-green-500/80 {% else %} bg-red-500/80 {% endif %}">
+                            {{ task.isDone ? 'Terminé' : 'En cours' }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="py-3 px-6 text-left font-semibold">Créée le</th>
+                    <td class="py-3 px-6">{{ task.createdAt ? task.createdAt|date('Y-m-d H:i') : '-' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+ 
+        <div class="mt-6 flex justify-between">
+            <a href="{{ path('app_task_index') }}" 
+               class="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-900 text-white font-bold rounded-xl shadow-lg transform transition 
+                      hover:scale-105 hover:shadow-2xl active:scale-95">
+                Retour à la liste
+            </a>
+
+            <a href="{{ path('app_task_edit', {'id': task.id}) }}" 
+               class="px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-700 text-white font-bold rounded-xl shadow-lg transform transition 
+                      hover:scale-105 hover:shadow-2xl active:scale-95">
+                Modifier
+            </a>
+
+            {{ include('task/_delete_form.html.twig') }}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

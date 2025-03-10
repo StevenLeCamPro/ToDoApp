@@ -1,0 +1,55 @@
+<div class="flex items-center justify-center bg-gradient-to-r from-blue-900 to-purple-900 p-6 rounded-lg">
+    <div class="w-full max-w-lg bg-white/10 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-white/20">
+        
+
+        {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+        <!-- Champ Title -->
+        <div class="relative">
+            <label for="{{ form.title.vars.id }}" class="absolute -top-4 left-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 rounded-full text-sm shadow-md">
+                Titre de la tâche
+            </label>
+            {{ form_widget(form.title, {
+                'attr': {
+                    'class': 'w-full p-4 rounded-xl bg-white/20 text-white placeholder-white/50 border border-white/30 shadow-inner focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all',
+                    'placeholder': 'Entrez un titre...'
+                }
+            }) }}
+            {{ form_errors(form.title) }}
+        </div>
+
+        <!-- Champ Description -->
+        <div class="relative">
+            <label for="{{ form.description.vars.id }}" class="absolute -top-4 left-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-1 rounded-full text-sm shadow-md">
+                Description
+            </label>
+            {{ form_widget(form.description, {
+                'attr': {
+                    'class': 'w-full p-4 rounded-xl bg-white/20 text-white placeholder-white/50 border border-white/30 shadow-inner focus:outline-none focus:ring-4 focus:ring-purple-400 transition-all',
+                    'placeholder': 'Décrivez la tâche...'
+                }
+            }) }}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <!-- Champ isDone -->
+        <div class="flex items-center space-x-4">
+            {{ form_widget(form.isDone, {
+                'attr': {
+                    'class': 'appearance-none w-6 h-6 rounded-lg border border-white/30 bg-white/20 checked:bg-gradient-to-r checked:from-blue-500 checked:to-purple-500 checked:shadow-lg transition-all cursor-pointer'
+                }
+            }) }}
+            <label for="{{ form.isDone.vars.id }}" class="text-white text-lg font-semibold">
+                Tâche terminée ?
+            </label>
+            {{ form_errors(form.isDone) }}
+        </div>
+
+        <!-- Bouton -->
+        <button class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-lg shadow-lg transform transition hover:scale-105 active:scale-95">
+            {{ button_label|default('Créer la tâche') }}
+        </button>
+
+        {{ form_end(form) }}
+    </div>
+</div>

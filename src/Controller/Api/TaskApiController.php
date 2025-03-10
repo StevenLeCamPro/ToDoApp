@@ -41,7 +41,7 @@ class TaskApiController extends AbstractController
         $task = $taskRepository->find($id);
 
         if (!$task) {
-            return $this->json(['message' => 'Task not found'], 404);
+            return $this->json(['message' => 'Tâche non trouvée'], 404);
         }
 
         // Retourner les données de la tâche en JSON

@@ -16,7 +16,36 @@
         {% endblock %}
     </head>
     <body>
+    <div class="flash-messages fixed top-10 right-6 z-50 flex flex-col items-center space-y-4 pointer-events-none">
+    {% for message in app.flashes('success') %}
+        <div class="flash flash-success py-4 px-6 rounded-xl text-lg font-semibold text-white shadow-lg transform transition-all duration-300 bg-gradient-to-r from-purple-700 via-indigo-600 to-blue-500 hover:scale-105 hover:translate-y-[-5px] animate-slideIn">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="flash flash-error py-4 px-6 rounded-xl text-lg font-semibold text-white shadow-lg transform transition-all duration-300 bg-gradient-to-r from-red-700 via-red-600 to-orange-500 hover:scale-105 hover:translate-y-[-5px] animate-slideIn animate-pulse">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+
         {% block body %}{% endblock %}
         {% include '/shared/footer.html.twig' %}
+
+
+        <script>
+    // Sélectionner tous les messages flash
+    document.querySelectorAll('.flash').forEach(function(message) {
+        // Appliquer une animation pour rendre le message transparent
+        setTimeout(function() {
+            message.classList.remove('opacity-100');
+            message.classList.add('opacity-0');
+            // Retirer le message du DOM après l'animation
+            setTimeout(function() {
+                message.remove();
+            }, 500); // Délai pour que l'animation de disparition soit terminée
+        }, 3000); // Le délai avant que l'animation commence (5 secondes)
+    });
+</script>
     </body>
 </html>

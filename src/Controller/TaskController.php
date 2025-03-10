@@ -9,35 +9,28 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/task')]
 final class TaskController extends AbstractController
 {
     #[Route(name: 'app_task_index', methods: ['GET'])]
-    // src/Controller/TaskController.php
+    public function index(Request $request, TaskRepository $taskRepository): Response
+    {
+        $statusFilter = $request->query->get('status');
 
-public function index(Request $request, TaskRepository $taskRepository): Response
-{
-    // Récupérer l'état du filtre depuis la requête
-    $statusFilter = $request->query->get('status'); // 'done' ou 'not_done'
+        if ($statusFilter === 'done') {
+            $tasks = $taskRepository->findBy(['isDone' => true]);
+        } elseif ($statusFilter === 'not_done') {
+            $tasks = $taskRepository->findBy(['isDone' => false]);
+        } else {
+            $tasks = $taskRepository->findAll();
+        }
 
-    if ($statusFilter === 'done') {
-        // Si 'done' est sélectionné, afficher uniquement les tâches terminées
-        $tasks = $taskRepository->findBy(['isDone' => true]);
-    } elseif ($statusFilter === 'not_done') {
-        // Si 'not_done' est sélectionné, afficher uniquement les tâches non terminées
-        $tasks = $taskRepository->findBy(['isDone' => false]);
-    } else {
-        // Par défaut, afficher toutes les tâches
-        $tasks = $taskRepository->findAll();
+        return $this->render('task/index.html.twig', [
+            'tasks' => $tasks,
+        ]);
     }
-
-    return $this->render('task/index.html.twig', [
-        'tasks' => $tasks,
-    ]);
-}
-
 
     #[Route('/new', name: 'app_task_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -49,6 +42,8 @@ public function index(Request $request, TaskRepository $taskRepository): Respons
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($task);
             $entityManager->flush();
+
+            $this->addFlash('success', 'La tâche a été créée avec succès !');
 
             return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -76,7 +71,10 @@ public function index(Request $request, TaskRepository $taskRepository): Respons
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+             $this->addFlash('success', 'La tâche a bien été mise à jour.');
+
+        // Redirection après la mise à jour
+        return $this->redirectToRoute('app_task_index', ['id' => $task->getId()]);
         }
 
         return $this->render('task/edit.html.twig', [
@@ -88,39 +86,36 @@ public function index(Request $request, TaskRepository $taskRepository): Respons
     #[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
     public function delete(Request $request, Task $task, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
             $entityManager->remove($task);
             $entityManager->flush();
-        }
 
+            
+        }
+        $this->addFlash('success', 'Task deleted successfully.');
         return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+        
     }
 
-    #[Route('/task/{id}/finished', name: 'app_task_finished', methods: ['POST'])]
+    #[Route('/{id}/finished', name: 'app_task_finished', methods: ['POST'])]
     public function markAsDone(Task $task, EntityManagerInterface $em): Response
-{
-    // Marquer la tâche comme terminée
-    $task->setIsDone(true);
+    {
+        $task->setIsDone(true);
+        $em->flush();
 
-    // Enregistrer la modification dans la base de données
-    $em->flush();
+        $this->addFlash('success', 'Tâche marquée comme "en cours".');
 
-    // Rediriger l'utilisateur vers la liste des tâches
-    return $this->redirectToRoute('app_task_index');
-}
+        return $this->redirectToRoute('app_task_index');
+    }
 
-#[Route('/task/{id}/unfinished', name: 'app_task_unfinished', methods: ['POST'])]
-public function markAsUndone(Task $task, EntityManagerInterface $em): Response
-{
-    // Marquer la tâche comme non terminée
-    $task->setIsDone(false);
+    #[Route('/{id}/unfinished', name: 'app_task_unfinished', methods: ['POST'])]
+    public function markAsUndone(Task $task, EntityManagerInterface $em): Response
+    {
+        $task->setIsDone(false);
+        $em->flush();
 
-    // Enregistrer la modification dans la base de données
-    $em->flush();
+        $this->addFlash('success', 'Tâche marquée comme "terminée".');
 
-    // Rediriger l'utilisateur vers la liste des tâches
-    return $this->redirectToRoute('app_task_index');
-}
-
-
+        return $this->redirectToRoute('app_task_index');
+    }
 }

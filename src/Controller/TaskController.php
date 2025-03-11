@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/task')]
+#[Route('/')]
 final class TaskController extends AbstractController
 {
     #[Route(name: 'app_task_index', methods: ['GET'])]
@@ -40,12 +40,12 @@ final class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager->persist($task);
             $entityManager->flush();
 
-            $this->addFlash('success', 'La tâche a été créée avec succès !');
-
-            return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Tâche créée avec succès !');
+            return $this->redirectToRoute('app_task_index');
         }
 
         return $this->render('task/new.html.twig', [
@@ -83,16 +83,18 @@ final class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_task_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_task_delete', methods: ['POST'])]
     public function delete(Request $request, Task $task, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$task->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($task);
-            $entityManager->flush();
 
-            
+        if (!$task) {
+            throw $this->createNotFoundException('Tâche introuvable.');
         }
-        $this->addFlash('success', 'Task deleted successfully.');
+
+        $entityManager->remove($task);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Vous avez supprimé la tâche.');
         return $this->redirectToRoute('app_task_index', [], Response::HTTP_SEE_OTHER);
         
     }
@@ -103,7 +105,7 @@ final class TaskController extends AbstractController
         $task->setIsDone(true);
         $em->flush();
 
-        $this->addFlash('success', 'Tâche marquée comme "en cours".');
+        $this->addFlash('success', 'Tâche marquée comme "terminée".');
 
         return $this->redirectToRoute('app_task_index');
     }
@@ -114,7 +116,7 @@ final class TaskController extends AbstractController
         $task->setIsDone(false);
         $em->flush();
 
-        $this->addFlash('success', 'Tâche marquée comme "terminée".');
+        $this->addFlash('success', 'Tâche marquée comme "en cours".');
 
         return $this->redirectToRoute('app_task_index');
     }

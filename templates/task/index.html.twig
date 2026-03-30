@@ -48,20 +48,20 @@
 </div>
 {% endfor %}
 <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-900 to-purple-900 p-6">
-    <div class="mb-6 p-6 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-lg text-center text-white">
-        <h2 class="text-2xl font-bold">Bienvenue sur votre To Do List !</h2>
-        <p class="mt-2 text-white/80">
+    <div class="mb-6 p-4 sm:p-6 bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-lg text-center text-white">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">Bienvenue sur votre To Do List !</h2>
+        <p class="text-sm sm:text-base md:text-lg mt-6 sm:mt-10 text-white/80">
             Vous pouvez créer, consulter et modifier vos tâches ici, c'est le meilleur moyen de rester concentré et actif. <br>
             Fait par Steven Le Cam - MMI 3. <br>
-           
         </p>
-        <p class="mt-2 text-white/80 underline font-bold">  Vous pouvez tester avec postman et la méthode "GET" sur ces URLS : <br>
+        <p class="text-sm sm:text-base md:text-lg mt-6 sm:mt-10 text-white/80 underline font-bold">
+            Vous pouvez tester avec postman et la méthode "GET" sur ces URLS : <br>
             - /api/tasks = Avoir toutes les tâches<br>
             - /api/task/{id} = Avoir une tâche en particulier<br>
-           - /api/taskCreate = Créer une tâche<br>
-              - /api/taskUpdate/{id} = Modifier une tâche<br>
-                - /api/taskDelete/{id} = Supprimer une tâche<br>
-            </p>
+            - /api/taskCreate = Créer une tâche<br>
+            - /api/taskUpdate/{id} = Modifier une tâche<br>
+            - /api/taskDelete/{id} = Supprimer une tâche<br>
+        </p>
     </div>
 
     <div class="w-full max-w-8xl bg-white/10 backdrop-blur-md p-8 rounded-3xl shadow-xl border border-white/20">
@@ -88,7 +88,7 @@
             <table class="min-w-full bg-white/10 backdrop-blur-lg text-white border border-white/20 rounded-2xl">
                 <thead class="bg-gradient-to-r from-blue-700 to-purple-700 text-white">
                     <tr>
-                        <th class="py-3 px-6 text-center">N°</th>
+                        {# <th class="py-3 px-6 text-center">N°</th> #}
                         <th class="py-3 px-6 text-center">Titre</th>
                         <th class="py-3 px-6 text-center">Description</th>
                         <th class="py-3 px-6 text-center">Statut</th>
@@ -99,7 +99,7 @@
                 <tbody>
                 {% for task in tasks %}
                     <tr class="border-b border-white/20 hover:bg-white/20 transition">
-                        <td class="py-3 px-6">{{ task.id }}</td>
+                        {# <td class="py-3 px-6">{{ task.id }}</td> #}
                         <td class="py-3 px-4 mx-12 max-w-[12vh] overflow-auto">{{ task.title }}</td>
                         <td class="py-3 px-4 max-w-[10vh] overflow-auto">{{ task.description }}</td>
                         <td class="py-3 mx-10 text-center">
